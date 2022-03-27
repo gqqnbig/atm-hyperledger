@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: check-shell
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ autorun, dev ]
+    paths:
+      - 'src/test/shell/**'
+      - '.github/workflows/check-shell.yml'
+  pull_request:
+    branches: [ autorun, dev ]
+    paths:
+      - 'src/test/shell/**'
+      - '.github/workflows/check-shell.yml'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Run Tests
+        # default shell sets the errexit option.
+        shell: bash {0}
+        run: |
+          for file in "$(find . \( -name .git \) -prune -o -type f -exec grep -z -l -E '^#!.+bash' '{}' \;)"
+          do
+            # For all bash scripts, check if they are shunit2 scripts.
+            # If yes, make sure they don't set errexit
+            # because shunit2 has a known issue that it doesn't support errexit.
+            # https://github.com/kward/shunit2/blob/47be8b23a46a7897e849f1841f0fb704d34d0f6e/doc/RELEASE_NOTES-2.1.8.md
+
+            if grep --quiet -P '(source|\.) .*\bshunit2$' "$file"; then
+              # grep -z will append a zero byte at the end, so trim it.
+              m1=$(grep -z -o -P '^#!.+\bbash.+?-[^e\s]*e' "$file" | tr -d '\0')
+              m2=$(grep -P 'set.+?(-[^e\s]*e|-o errexit)' "$file")
+              if [[ $m1 ]] || [[ $m2 ]]; then
+                echo "shunit2 script does not support errexit (-e):" >&2
+                echo "Found $m1$m2 in $file" >&2
+                exit 1
+              fi
+            fi
+          done
