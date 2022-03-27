@@ -1,0 +1,535 @@
+package services.impl;
+
+import services.*;
+import entities.*;
+import java.util.List;
+import java.util.LinkedList;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.function.Predicate;
+import java.util.Arrays;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
+import org.apache.commons.lang3.SerializationUtils;
+import java.util.Iterator;
+
+public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineSystem, Serializable {
+	
+	
+	public static Map<String, List<String>> opINVRelatedEntity = new HashMap<String, List<String>>();
+	
+	
+	ThirdPartyServices services;
+			
+	public AutomatedTellerMachineSystemImpl() {
+		services = new ThirdPartyServicesImpl();
+	}
+
+	public void refresh() {
+		ManageBankCardCRUDService managebankcardcrudservice_service = (ManageBankCardCRUDService) ServiceManager
+				.getAllInstancesOf("ManageBankCardCRUDService").get(0);
+		managebankcardcrudservice_service.setPasswordValidated(PasswordValidated);
+		managebankcardcrudservice_service.setWithdrawedNumber(WithdrawedNumber);
+		managebankcardcrudservice_service.setInputCard(InputCard);
+		managebankcardcrudservice_service.setCardIDValidated(CardIDValidated);
+		managebankcardcrudservice_service.setIsDeposit(IsDeposit);
+		managebankcardcrudservice_service.setIsWithdraw(IsWithdraw);
+		managebankcardcrudservice_service.setDepositedNumber(DepositedNumber);
+		ManageUserCRUDService manageusercrudservice_service = (ManageUserCRUDService) ServiceManager
+				.getAllInstancesOf("ManageUserCRUDService").get(0);
+		manageusercrudservice_service.setPasswordValidated(PasswordValidated);
+		manageusercrudservice_service.setWithdrawedNumber(WithdrawedNumber);
+		manageusercrudservice_service.setInputCard(InputCard);
+		manageusercrudservice_service.setCardIDValidated(CardIDValidated);
+		manageusercrudservice_service.setIsDeposit(IsDeposit);
+		manageusercrudservice_service.setIsWithdraw(IsWithdraw);
+		manageusercrudservice_service.setDepositedNumber(DepositedNumber);
+	}			
+	
+	/* Generate buiness logic according to functional requirement */
+	@SuppressWarnings("unchecked")
+	public boolean depositFunds(float quantity) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* previous state in post-condition*/
+		/* service reference */
+		AutomatedTellerMachineSystemImpl Pre_this = SerializationUtils.clone(this);
+		/* service temp attribute */
+		/* objects in definition */
+
+		/* check precondition */
+		if (this.getPasswordValidated() == true && this.getCardIDValidated() == true && StandardOPs.oclIsundefined(this.getInputCard()) == false && quantity >= 100) 
+		{ 
+			/* Logic here */
+			this.getInputCard().setBalance(this.getInputCard().getBalance()+quantity);
+			this.setIsDeposit(true);
+			this.setDepositedNumber(quantity);
+			
+			
+			refresh();
+			// post-condition checking
+			if (!(this.getInputCard().getBalance() == Pre_this.getInputCard().getBalance()+quantity
+			 && 
+			this.getIsDeposit() == true
+			 && 
+			this.getDepositedNumber() == quantity
+			 && 
+			true)) {
+				throw new PostconditionException();
+			}
+			
+		
+			//return primitive type
+			refresh();				
+			return true;
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+		//all relevant vars : this
+		//all relevant entities : 
+	} 
+	 
+	static {opINVRelatedEntity.put("depositFunds", Arrays.asList(""));}
+	
+	@SuppressWarnings("unchecked")
+	public boolean inputPassword(int password) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* previous state in post-condition*/
+
+		/* check precondition */
+		if (this.getCardIDValidated() == true && StandardOPs.oclIsundefined(this.getInputCard()) == false) 
+		{ 
+			/* Logic here */
+			if (this.getInputCard().getPassword() == password)
+			{
+				this.setPasswordValidated(true);
+				
+				refresh();
+				// post-condition checking
+				if (!((this.getInputCard().getPassword() == password ? this.getPasswordValidated() == true
+				 && 
+				true : this.getPasswordValidated() == false
+				 && 
+				true))) {
+					throw new PostconditionException();
+				}
+				
+				//return code
+				refresh();
+				return true;
+			}
+			else
+			{
+			 	this.setPasswordValidated(false);
+			 	
+			 	refresh();
+			 	// post-condition checking
+			 	if (!((this.getInputCard().getPassword() == password ? this.getPasswordValidated() == true
+			 	 && 
+			 	true : this.getPasswordValidated() == false
+			 	 && 
+			 	true))) {
+			 		throw new PostconditionException();
+			 	}
+			 	
+			 	//return code
+			 	refresh();
+			 	return false;
+			}
+			
+			
+			
+		
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+		//all relevant vars : this
+		//all relevant entities : 
+	} 
+	 
+	static {opINVRelatedEntity.put("inputPassword", Arrays.asList(""));}
+	
+	@SuppressWarnings("unchecked")
+	public boolean inputCard(int cardid) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* Code generated for contract definition */
+		//Get bc
+		BankCard bc = null;
+		//no nested iterator --  iterator: any previous:any
+		for (BankCard c : (List<BankCard>)EntityManager.getAllInstancesOf("BankCard"))
+		{
+			if (c.getCardID() == cardid)
+			{
+				bc = c;
+				break;
+			}
+				
+			
+		}
+		/* previous state in post-condition*/
+
+		/* check precondition */
+		if (true) 
+		{ 
+			/* Logic here */
+			if ((StandardOPs.oclIsundefined(bc) == false))
+			{
+				this.setCardIDValidated(true);
+				this.setInputCard(bc);
+				
+				refresh();
+				// post-condition checking
+				if (!(((StandardOPs.oclIsundefined(bc) == false) ? this.getCardIDValidated() == true
+				 && 
+				this.getInputCard() == bc
+				 && 
+				true : this.getCardIDValidated() == false
+				 && 
+				true))) {
+					throw new PostconditionException();
+				}
+				
+				//return code
+				refresh();
+				return true;
+			}
+			else
+			{
+			 	this.setCardIDValidated(false);
+			 	
+			 	refresh();
+			 	// post-condition checking
+			 	if (!(((StandardOPs.oclIsundefined(bc) == false) ? this.getCardIDValidated() == true
+			 	 && 
+			 	this.getInputCard() == bc
+			 	 && 
+			 	true : this.getCardIDValidated() == false
+			 	 && 
+			 	true))) {
+			 		throw new PostconditionException();
+			 	}
+			 	
+			 	//return code
+			 	refresh();
+			 	return false;
+			}
+			
+			
+			
+		
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+		//all relevant vars : this
+		//all relevant entities : 
+	} 
+	 
+	static {opINVRelatedEntity.put("inputCard", Arrays.asList(""));}
+	
+	@SuppressWarnings("unchecked")
+	public boolean ejectCard() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* previous state in post-condition*/
+
+		/* check precondition */
+		if (this.getPasswordValidated() == true && this.getCardIDValidated() == true && StandardOPs.oclIsundefined(this.getInputCard()) == false) 
+		{ 
+			/* Logic here */
+			this.setInputCard(null);
+			this.setPasswordValidated(false);
+			this.setCardIDValidated(false);
+			this.setIsWithdraw(false);
+			this.setIsDeposit(false);
+			this.setWithdrawedNumber(0);
+			this.setDepositedNumber(0);
+			
+			
+			refresh();
+			// post-condition checking
+			if (!(this.getInputCard() == null
+			 && 
+			this.getPasswordValidated() == false
+			 && 
+			this.getCardIDValidated() == false
+			 && 
+			this.getIsWithdraw() == false
+			 && 
+			this.getIsDeposit() == false
+			 && 
+			this.getWithdrawedNumber() == 0
+			 && 
+			this.getDepositedNumber() == 0
+			 && 
+			true)) {
+				throw new PostconditionException();
+			}
+			
+		
+			//return primitive type
+			refresh();				
+			return true;
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+		//all relevant vars : this
+		//all relevant entities : 
+	} 
+	 
+	static {opINVRelatedEntity.put("ejectCard", Arrays.asList(""));}
+	
+	@SuppressWarnings("unchecked")
+	public boolean withdrawCash(int quantity) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* previous state in post-condition*/
+		/* service reference */
+		AutomatedTellerMachineSystemImpl Pre_this = SerializationUtils.clone(this);
+		/* service temp attribute */
+		/* objects in definition */
+
+		/* check precondition */
+		if (this.getPasswordValidated() == true && this.getCardIDValidated() == true && StandardOPs.oclIsundefined(this.getInputCard()) == false && this.getInputCard().getBalance() >= quantity) 
+		{ 
+			/* Logic here */
+			this.getInputCard().setBalance(this.getInputCard().getBalance()-quantity);
+			this.setWithdrawedNumber(quantity);
+			this.setIsWithdraw(true);
+			
+			
+			refresh();
+			// post-condition checking
+			if (!(this.getInputCard().getBalance() == Pre_this.getInputCard().getBalance()-quantity
+			 && 
+			this.getWithdrawedNumber() == quantity
+			 && 
+			this.getIsWithdraw() == true
+			 && 
+			true)) {
+				throw new PostconditionException();
+			}
+			
+		
+			//return primitive type
+			refresh();				
+			return true;
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+		//all relevant vars : this
+		//all relevant entities : 
+	} 
+	 
+	static {opINVRelatedEntity.put("withdrawCash", Arrays.asList(""));}
+	
+	@SuppressWarnings("unchecked")
+	public float printReceipt() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* previous state in post-condition*/
+
+		/* check precondition */
+		if (this.getCardIDValidated() == true && this.getPasswordValidated() == true && StandardOPs.oclIsundefined(this.getInputCard()) == false) 
+		{ 
+			/* Logic here */
+			if (this.getIsWithdraw() == true)
+			{
+				
+				refresh();
+				// post-condition checking
+				if (!((this.getIsWithdraw() == true ? true : (this.getIsDeposit() == true ? true : true)))) {
+					throw new PostconditionException();
+				}
+				
+				//return code
+				refresh();
+				return this.getWithdrawedNumber();
+			}
+			else
+			{
+			 	if (this.getIsDeposit() == true)
+			 	{
+			 		
+			 		refresh();
+			 		// post-condition checking
+			 		if (!((this.getIsWithdraw() == true ? true : (this.getIsDeposit() == true ? true : true)))) {
+			 			throw new PostconditionException();
+			 		}
+			 		
+			 		//return code
+			 		refresh();
+			 		return this.getDepositedNumber();
+			 	}
+			 	else
+			 	{
+			 	 	
+			 	 	refresh();
+			 	 	// post-condition checking
+			 	 	if (!((this.getIsWithdraw() == true ? true : (this.getIsDeposit() == true ? true : true)))) {
+			 	 		throw new PostconditionException();
+			 	 	}
+			 	 	
+			 	 	//return code
+			 	 	refresh();
+			 	 	return 0;
+			 	}
+			}
+			
+			
+			
+		
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+		//all relevant vars : this
+		//all relevant entities : 
+	} 
+	 
+	static {opINVRelatedEntity.put("printReceipt", Arrays.asList(""));}
+	
+	@SuppressWarnings("unchecked")
+	public float checkBalance() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* previous state in post-condition*/
+
+		/* check precondition */
+		if (this.getPasswordValidated() == true && this.getCardIDValidated() == true && StandardOPs.oclIsundefined(this.getInputCard()) == false) 
+		{ 
+			/* Logic here */
+			
+			
+			refresh();
+			// post-condition checking
+			if (!(true)) {
+				throw new PostconditionException();
+			}
+			
+		
+			//return primitive type
+			refresh();				
+			return this.getInputCard().getBalance();
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+		//all relevant vars : this
+		//all relevant entities : 
+	} 
+	 
+	static {opINVRelatedEntity.put("checkBalance", Arrays.asList(""));}
+	
+	@SuppressWarnings("unchecked")
+	public boolean cardIdentification() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		
+		
+		/* previous state in post-condition*/
+
+		/* check precondition */
+		if (true) 
+		{ 
+			/* Logic here */
+			
+			
+			refresh();
+			// post-condition checking
+			if (!(true)) {
+				throw new PostconditionException();
+			}
+			
+		
+			//return primitive type
+			refresh();				
+			return true;
+		}
+		else
+		{
+			throw new PreconditionException();
+		}
+	} 
+	 
+	
+	
+	
+	
+	/* temp property for controller */
+	private boolean PasswordValidated;
+	private float WithdrawedNumber;
+	private BankCard InputCard;
+	private boolean CardIDValidated;
+	private boolean IsDeposit;
+	private boolean IsWithdraw;
+	private float DepositedNumber;
+			
+	/* all get and set functions for temp property*/
+	public boolean getPasswordValidated() {
+		return PasswordValidated;
+	}	
+	
+	public void setPasswordValidated(boolean passwordvalidated) {
+		this.PasswordValidated = passwordvalidated;
+	}
+	public float getWithdrawedNumber() {
+		return WithdrawedNumber;
+	}	
+	
+	public void setWithdrawedNumber(float withdrawednumber) {
+		this.WithdrawedNumber = withdrawednumber;
+	}
+	public BankCard getInputCard() {
+		return InputCard;
+	}	
+	
+	public void setInputCard(BankCard inputcard) {
+		this.InputCard = inputcard;
+	}
+	public boolean getCardIDValidated() {
+		return CardIDValidated;
+	}	
+	
+	public void setCardIDValidated(boolean cardidvalidated) {
+		this.CardIDValidated = cardidvalidated;
+	}
+	public boolean getIsDeposit() {
+		return IsDeposit;
+	}	
+	
+	public void setIsDeposit(boolean isdeposit) {
+		this.IsDeposit = isdeposit;
+	}
+	public boolean getIsWithdraw() {
+		return IsWithdraw;
+	}	
+	
+	public void setIsWithdraw(boolean iswithdraw) {
+		this.IsWithdraw = iswithdraw;
+	}
+	public float getDepositedNumber() {
+		return DepositedNumber;
+	}	
+	
+	public void setDepositedNumber(float depositednumber) {
+		this.DepositedNumber = depositednumber;
+	}
+	
+	/* invarints checking*/
+	public final static ArrayList<String> allInvariantCheckingFunction = new ArrayList<String>(Arrays.asList());
+			
+}
