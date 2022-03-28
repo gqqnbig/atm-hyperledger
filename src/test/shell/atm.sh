@@ -164,13 +164,17 @@ testAtmTransaction() {
 	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:withdrawCash","Args":["100"]}'; then
 		fail || return
 	fi
-	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:withdrawCash","Args":["10"]}' ||
-		fail 'Withdraw cash must succeed.' || return
 
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:depositFunds","Args":["101"]}'
 	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:printReceipt","Args":[]}' 2>&1 |
 		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
-	assertEquals "10.0" "$output"
+	assertEquals "101.0" "$output" || return
 
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:withdrawCash","Args":["20"]}' ||
+		fail 'Withdraw cash must succeed.' || return
+
+	output=$(peer chaincode query -C mychannel -n atm -c '{"function":"AutomatedTellerMachineSystemImpl:checkBalance","Args":[]}')
+	assertEquals "91.0" "$output"
 }
 
 testPrintReceipt() {
