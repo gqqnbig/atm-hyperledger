@@ -561,13 +561,27 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	public void setWithdrawedNumber(float withdrawednumber) {
 		this.WithdrawedNumber = withdrawednumber;
 	}
-	public BankCard getInputCard() {
-		return getInputCard();
-	}	
-	
-	public void setInputCard(BankCard inputcard) {
-		this.InputCard = inputcard;
+
+	private Object getInputCardPK() {
+		if (InputCardPK == null)
+			InputCardPK = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.InputCardPK"), Integer.class);
+		return InputCardPK;
 	}
+
+	private void setInputCardPK(Object inputcardPK) {
+		String json = genson.serialize(inputcardPK);
+		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.InputCardPK", json);
+		this.InputCardPK = inputcardPK;
+	}
+
+	public BankCard getInputCard() {
+		return EntityManager.getBankCardByPK(getInputCardPK());
+	}
+
+	public void setInputCard(BankCard inputcard) {
+		setInputCardPK(inputcard.getPK());
+	}
+
 	public boolean getCardIDValidated() {
 		if (CardIDValidated == null)
 			CardIDValidated = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.CardIDValidated"), Boolean.class);

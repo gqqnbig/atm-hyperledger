@@ -130,4 +130,27 @@ testAtmNonexistentCard() {
 	fi
 }
 
+testAtmPassword() {
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:ejectCard","Args":[]}'; then
+		fail || return
+	fi
+
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:createBankCard","Args":["1","NORMAL","CREDIT","666","10"]}'
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputCard","Args":["1"]}'
+
+	# In read-write set, find the one targeting atm,
+	# and make sure the write set is not empty.
+	writes=$(getBlockInfo | jq '.. |.ns_rwset? | .[]? | select(.namespace=="atm"?)  | .rwset.writes')
+	assertContains "inputCard() should set CardIDValidated" "$writes" "CardIDValidated" || return
+	assertContains "inputCard() should set InputCard" "$writes" "InputCard" || return
+
+	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputPassword","Args":["123"]}' 2>&1 |
+		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
+	assertEquals "Inputting a wrong password should return false" "false" "$output"
+
+	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputPassword","Args":["666"]}' 2>&1 |
+		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
+	assertEquals "Inputting a correct password should return false" "true" "$output"
+}
+
 source shunit2
