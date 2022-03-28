@@ -88,8 +88,19 @@ testManageUser() {
 
 testmanageCard() {
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:createBankCard","Args":["1","NORMAL","CREDIT","666","10"]}'
+
+	docker stop "$(docker ps -n 1 --filter 'name=dev' --format '{{.ID}}')"
+	
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:createBankCard","Args":["1","NORMAL","CREDIT","666","10"]}'; then
+		fail || return
+	fi
+	docker stop "$(docker ps -n 1 --filter 'name=dev' --format '{{.ID}}')"
+
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:queryBankCard","Args":["1"]}'
+
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:modifyBankCard","Args":["1", "CANNEL", "DESPOSIT", "888","100"]}'
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:modifyBankCard","Args":["1", "CANNEL", "DESPOSIT", "888","100"]}'
+
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:deleteBankCard","Args":["1"]}'
 }
 
