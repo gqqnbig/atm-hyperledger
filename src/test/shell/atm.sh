@@ -56,6 +56,9 @@ getBlockInfo() {
 
 testManageUser() {
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageUserCRUDServiceImpl:createUser","Args":["1","Tom","Los Angeles"]}'
+
+	docker stop "$(docker ps -n 1 --filter 'name=dev' --format '{{.ID}}')"
+
 	output=$(peer chaincode query -C mychannel -n atm -c '{"function":"ManageUserCRUDServiceImpl:queryUser","Args":["1"]}')
 	assertContains "$output" "Tom"
 	assertContains "$output" "Los Angeles"
@@ -65,6 +68,9 @@ testManageUser() {
 	fi
 
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageUserCRUDServiceImpl:modifyUser","Args":["1","Jessica","San Francisco"]}'
+
+	docker stop "$(docker ps -n 1 --filter 'name=dev' --format '{{.ID}}')"
+
 	output=$(peer chaincode query -C mychannel -n atm -c '{"function":"ManageUserCRUDServiceImpl:queryUser","Args":["1"]}')
 	assertContains "$output" "Jessica"
 	assertContains "$output" "Francisco"
@@ -74,6 +80,10 @@ testManageUser() {
 	fi
 
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageUserCRUDServiceImpl:deleteUser","Args":["1"]}'
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageUserCRUDServiceImpl:deleteUser","Args":["1"]}'; then
+		fail "cannot delete the same user again" || return
+	fi
 }
 
 
