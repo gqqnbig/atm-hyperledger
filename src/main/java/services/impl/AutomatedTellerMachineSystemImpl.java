@@ -280,8 +280,9 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			this.setIsDeposit(false);
 			this.setWithdrawedNumber(0);
 			this.setDepositedNumber(0);
-			
-			
+
+			System.out.println(getInputCard());
+
 			;
 			// post-condition checking
 			if (!(this.getInputCard() == null
@@ -498,6 +499,13 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	
 	
 	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public void nullTest(final Context ctx) {
+		String json = genson.serialize(null);
+		ctx.getStub().putStringState("AutomatedTellerMachineSystemImpl.InputCardPK", json);
+	}
+
+
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
 	public boolean cardIdentification(final Context ctx) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		ChaincodeStub stub = ctx.getStub();
 		EntityManager.setStub(stub);
@@ -588,7 +596,11 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	private void setInputCardPK(Object inputcardPK) {
 		String json = genson.serialize(inputcardPK);
 		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.InputCardPK", json);
-		this.InputCardPK = inputcardPK;
+		//If we set inputcardPK to null,  getInputCardPK() thinks this fields is not initialized, thus will read the old value from chain.
+		if (inputcardPK != null)
+			this.InputCardPK = inputcardPK;
+		else
+			this.InputCardPK = EntityManager.getGuid();
 	}
 
 	public BankCard getInputCard() {
@@ -598,7 +610,10 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}
 
 	public void setInputCard(BankCard inputcard) {
-		setInputCardPK(inputcard.getPK());
+		if (inputcard != null)
+			setInputCardPK(inputcard.getPK());
+		else
+			setInputCardPK(null);
 		this.InputCard = inputcard;
 	}
 

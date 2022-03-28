@@ -199,4 +199,20 @@ testPrintReceipt() {
 	assertEquals "10.0" "$output"
 }
 
+testEjectCard() {
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:createBankCard","Args":["1","NORMAL","CREDIT","666","10"]}'
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputCard","Args":["1"]}'
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:ejectCard","Args":["1"]}'; then
+		fail 'cannot eject card without passing password validation' || return
+	fi
+
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputPassword","Args":["666"]}'
+
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:ejectCard","Args":["1"]}'
+
+	writes=$(getBlockInfo | jq '.. |.ns_rwset? | .[]? | select(.namespace=="atm"?)  | .rwset.writes')
+	assertContains "ejectCard() should set InputCard" "$writes" "InputCard" || return
+}
+
 source shunit2
