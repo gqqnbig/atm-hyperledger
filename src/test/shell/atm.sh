@@ -150,7 +150,26 @@ testAtmPassword() {
 
 	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputPassword","Args":["666"]}' 2>&1 |
 		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
-	assertEquals "Inputting a correct password should return false" "true" "$output"
+	assertEquals "Inputting a correct password should return true" "true" "$output"
 }
 
+testAtmTransaction() {
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:createBankCard","Args":["1","NORMAL","CREDIT","666","10"]}'
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputCard","Args":["1"]}'
+
+	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputPassword","Args":["666"]}' 2>&1 |
+		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
+	assertEquals "Inputting a correct password should return true" "true" "$output"
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:withdrawCash","Args":["100"]}'; then
+		fail || return
+	fi
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:withdrawCash","Args":["10"]}' ||
+		fail 'Withdraw cash must succeed.' || return
+
+	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:printReceipt","Args":[]}' 2>&1 |
+		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
+	assertEquals "10" "$output"
+
+}
 source shunit2
