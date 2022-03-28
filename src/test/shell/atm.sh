@@ -169,7 +169,7 @@ testAtmTransaction() {
 
 	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:printReceipt","Args":[]}' 2>&1 |
 		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
-	assertEquals "10" "$output"
+	assertEquals "10.0" "$output"
 
 }
 source shunit2

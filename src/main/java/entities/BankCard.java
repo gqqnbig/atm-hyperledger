@@ -1,10 +1,8 @@
 package entities;
 
 import services.impl.StandardOPs;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.*;
 import java.time.LocalDate;
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -74,8 +72,11 @@ public class BankCard implements Serializable {
 	/* all functions for reference*/
 	@JsonIgnore
 	public User getBelongedUser() {
-		if (BelongedUser == null)
+		if (BelongedUser == null) {
+			if (BelongedUserPK instanceof Long)
+				BelongedUserPK = Math.toIntExact((long) BelongedUserPK);
 			BelongedUser = EntityManager.getUserByPK(BelongedUserPK);
+		}
 		return BelongedUser;
 	}	
 	
@@ -132,4 +133,13 @@ public class BankCard implements Serializable {
 	
 	public final static ArrayList<String> allInvariantCheckingFunction = new ArrayList<String>(Arrays.asList("BankCard_UniqueCardID","BankCard_BalanceGreatAndEqualZero"));
 
+
+	public void prepareClone(HashSet<Object> prepared) {
+		if (prepared.contains(this))
+			return;
+		prepared.add(this);
+		if (getBelongedUser() != null)
+			getBelongedUser().prepareClone(prepared);
+
+	}
 }

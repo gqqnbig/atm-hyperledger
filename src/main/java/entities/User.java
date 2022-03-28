@@ -1,10 +1,8 @@
 package entities;
 
 import services.impl.StandardOPs;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.*;
 import java.time.LocalDate;
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -113,4 +111,11 @@ public class User implements Serializable {
 	
 	public final static ArrayList<String> allInvariantCheckingFunction = new ArrayList<String>(Arrays.asList("User_UniqueUserID"));
 
+	public void prepareClone(HashSet<Object> prepared) {
+		if (prepared.contains(this))
+			return;
+		prepared.add(this);
+
+		getOwnedCard().stream().forEach(obj -> obj.prepareClone(prepared));
+	}
 }

@@ -2,18 +2,15 @@ package services.impl;
 
 import services.*;
 import entities.*;
-import java.util.List;
-import java.util.LinkedList;
+
+import java.util.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.function.Predicate;
-import java.util.Arrays;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BooleanSupplier;
+
 import org.apache.commons.lang3.SerializationUtils;
-import java.util.Iterator;
+
 import org.hyperledger.fabric.shim.*;
 import org.hyperledger.fabric.contract.annotation.*;
 import org.hyperledger.fabric.contract.*;
@@ -52,6 +49,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 		
 		/* previous state in post-condition*/
 		/* service reference */
+		this.prepareClone(new HashSet<>());
 		AutomatedTellerMachineSystemImpl Pre_this = SerializationUtils.clone(this);
 		/* service temp attribute */
 		/* objects in definition */
@@ -333,6 +331,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 		
 		/* previous state in post-condition*/
 		/* service reference */
+		this.prepareClone(new HashSet<>());
 		AutomatedTellerMachineSystemImpl Pre_this = SerializationUtils.clone(this);
 		/* service temp attribute */
 		/* objects in definition */
@@ -539,6 +538,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	/* temp property for controller */
 	private Boolean PasswordValidated;
 	private Float WithdrawedNumber;
+	private BankCard InputCard;
 	private Object InputCardPK;
 	private BankCard InputCard;
 	private Boolean CardIDValidated;
@@ -588,11 +588,14 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}
 
 	public BankCard getInputCard() {
-		return EntityManager.getBankCardByPK(getInputCardPK());
+		if (InputCard == null)
+			InputCard = EntityManager.getBankCardByPK(getInputCardPK());
+		return InputCard;
 	}
 
 	public void setInputCard(BankCard inputcard) {
 		setInputCardPK(inputcard.getPK());
+		this.InputCard = inputcard;
 	}
 
 	public boolean getCardIDValidated() {
@@ -653,5 +656,13 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	
 	/* invarints checking*/
 	public final static ArrayList<String> allInvariantCheckingFunction = new ArrayList<String>(Arrays.asList());
-			
+
+
+	public void prepareClone(HashSet<Object> prepared) {
+		if (prepared.contains(this))
+			return;
+		prepared.add(this);
+		if (getInputCard() != null)
+			getInputCard().prepareClone(prepared);
+	}
 }
