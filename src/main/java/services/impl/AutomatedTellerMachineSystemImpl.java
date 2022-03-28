@@ -537,28 +537,41 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	
 	
 	/* temp property for controller */
-	private boolean PasswordValidated;
-	private float WithdrawedNumber;
+	private Boolean PasswordValidated;
+	private Float WithdrawedNumber;
 	private Object InputCardPK;
 	private BankCard InputCard;
 	private Boolean CardIDValidated;
-	private boolean IsDeposit;
-	private boolean IsWithdraw;
-	private float DepositedNumber;
-			
+	private Boolean IsDeposit;
+	private Boolean IsWithdraw;
+	private Float DepositedNumber;
+
 	/* all get and set functions for temp property*/
 	public boolean getPasswordValidated() {
-		return PasswordValidated;
-	}	
-	
+		if (PasswordValidated == null)
+			PasswordValidated = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.PasswordValidated"), Boolean.class);
+		if (PasswordValidated != null)
+			return PasswordValidated;
+		else
+			return false;
+	}
+
 	public void setPasswordValidated(boolean passwordvalidated) {
+		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.PasswordValidated", genson.serialize(passwordvalidated));
 		this.PasswordValidated = passwordvalidated;
 	}
+
 	public float getWithdrawedNumber() {
-		return WithdrawedNumber;
-	}	
-	
+		if (WithdrawedNumber == null)
+			WithdrawedNumber = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.WithdrawedNumber"), Float.class);
+		if (WithdrawedNumber != null)
+			return WithdrawedNumber;
+		else
+			return 0;
+	}
+
 	public void setWithdrawedNumber(float withdrawednumber) {
+		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.WithdrawedNumber", genson.serialize(withdrawednumber));
 		this.WithdrawedNumber = withdrawednumber;
 	}
 
@@ -585,32 +598,56 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	public boolean getCardIDValidated() {
 		if (CardIDValidated == null)
 			CardIDValidated = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.CardIDValidated"), Boolean.class);
-		return CardIDValidated;
+		if (CardIDValidated != null)
+			return CardIDValidated;
+		else
+			return false;
 	}
 
 	public void setCardIDValidated(boolean cardidvalidated) {
 		this.CardIDValidated = cardidvalidated;
 		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.CardIDValidated", genson.serialize(cardidvalidated));
 	}
+
 	public boolean getIsDeposit() {
-		return IsDeposit;
-	}	
-	
+		if (IsDeposit == null)
+			IsDeposit = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.IsDeposit"), Boolean.class);
+		if (IsDeposit != null)
+			return IsDeposit;
+		else
+			return false;
+	}
+
 	public void setIsDeposit(boolean isdeposit) {
+		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.IsDeposit", genson.serialize(isdeposit));
 		this.IsDeposit = isdeposit;
 	}
+
 	public boolean getIsWithdraw() {
-		return IsWithdraw;
-	}	
-	
+		if (IsWithdraw == null)
+			IsWithdraw = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.IsWithdraw"), Boolean.class);
+		if (IsWithdraw != null)
+			return IsWithdraw;
+		else
+			return false;
+	}
+
 	public void setIsWithdraw(boolean iswithdraw) {
+		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.IsWithdraw", genson.serialize(iswithdraw));
 		this.IsWithdraw = iswithdraw;
 	}
+
 	public float getDepositedNumber() {
-		return DepositedNumber;
-	}	
-	
+		if (DepositedNumber == null)
+			DepositedNumber = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.DepositedNumber"), Float.class);
+		if (DepositedNumber != null)
+			return DepositedNumber;
+		else
+			return 0;
+	}
+
 	public void setDepositedNumber(float depositednumber) {
+		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.DepositedNumber", genson.serialize(depositednumber));
 		this.DepositedNumber = depositednumber;
 	}
 	
