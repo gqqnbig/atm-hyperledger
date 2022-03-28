@@ -541,7 +541,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	private float WithdrawedNumber;
 	private Object InputCardPK;
 	private BankCard InputCard;
-	private boolean CardIDValidated;
+	private Boolean CardIDValidated;
 	private boolean IsDeposit;
 	private boolean IsWithdraw;
 	private float DepositedNumber;
@@ -569,11 +569,14 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 		this.InputCard = inputcard;
 	}
 	public boolean getCardIDValidated() {
+		if (CardIDValidated == null)
+			CardIDValidated = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.CardIDValidated"), Boolean.class);
 		return CardIDValidated;
-	}	
-	
+	}
+
 	public void setCardIDValidated(boolean cardidvalidated) {
 		this.CardIDValidated = cardidvalidated;
+		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.CardIDValidated", genson.serialize(cardidvalidated));
 	}
 	public boolean getIsDeposit() {
 		return IsDeposit;
