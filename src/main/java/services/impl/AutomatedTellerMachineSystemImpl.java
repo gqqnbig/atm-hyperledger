@@ -70,7 +70,9 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			this.getIsDeposit() == true
 			 && 
 			this.getDepositedNumber() == quantity
-			 && 
+			 &&
+			EntityManager.saveModified(BankCard.class)
+			 &&
 			true)) {
 				throw new PostconditionException();
 			}
@@ -352,7 +354,9 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			this.getWithdrawedNumber() == quantity
 			 && 
 			this.getIsWithdraw() == true
-			 && 
+			 &&
+			EntityManager.saveModified(BankCard.class)
+			 &&
 			true)) {
 				throw new PostconditionException();
 			}
