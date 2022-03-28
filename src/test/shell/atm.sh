@@ -104,4 +104,30 @@ testmanageCard() {
 	pci -C mychannel -n atm --waitForEvent -c '{"function":"ManageBankCardCRUDServiceImpl:deleteBankCard","Args":["1"]}'
 }
 
+testAtmNonexistentCard() {
+	output=$(pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputCard","Args":["2"]}' 2>&1 |
+		sed -n -r 's/.+status:200[[:space:]]+payload:"(.+)"[[:space:]]*$/\1/p')
+	assertEquals "Inserting a nonexistent card should return false" "false" "$output"
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputPassword","Args":["123"]}'; then
+		fail || return
+	fi
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:printReceipt","Args":[]}'; then
+		fail || return
+	fi
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:checkBalance","Args":[]}'; then
+		fail || return
+	fi
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:depositFunds","Args":["50"]}'; then
+		fail || return
+	fi
+
+	if pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:withdrawCash","Args":["20"]}'; then
+		fail || return
+	fi
+}
+
 source shunit2
