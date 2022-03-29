@@ -213,6 +213,10 @@ testEjectCard() {
 
 	writes=$(getBlockInfo | jq '.. |.ns_rwset? | .[]? | select(.namespace=="atm"?)  | .rwset.writes')
 	assertContains "ejectCard() should set InputCard" "$writes" "InputCard" || return
+
+	docker stop "$(docker ps -n 1 --filter 'name=dev' --format '{{.ID}}')"
+
+	pci -C mychannel -n atm --waitForEvent -c '{"function":"AutomatedTellerMachineSystemImpl:inputCard","Args":["1"]}'
 }
 
 source shunit2
