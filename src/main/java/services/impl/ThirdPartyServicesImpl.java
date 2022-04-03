@@ -30,6 +30,7 @@ public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable 
 	/* Shared variable from system services and get()/set() methods */
 	private boolean PasswordValidated;
 	private float WithdrawedNumber;
+	private BankCard InputCard;
 	private Object InputCardPK;
 	private BankCard InputCard;
 	private boolean CardIDValidated;
@@ -52,13 +53,37 @@ public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable 
 	public void setWithdrawedNumber(float withdrawednumber) {
 		this.WithdrawedNumber = withdrawednumber;
 	}
+
+	private Object getInputCardPK() {
+		if (InputCardPK == null)
+			InputCardPK = genson.deserialize(EntityManager.getStub().getStringState("ThirdPartyServicesImpl.InputCardPK"), Integer.class);
+		return InputCardPK;
+	}
+
+	private void setInputCardPK(Object inputcardPK) {
+		String json = genson.serialize(inputcardPK);
+		EntityManager.getStub().putStringState("ThirdPartyServicesImpl.InputCardPK", json);
+		//If we set inputcardPK to null,  getInputCardPK() thinks this fields is not initialized, thus will read the old value from chain.
+		if (inputcardPK != null)
+			this.InputCardPK = inputcardPK;
+		else
+			this.InputCardPK = EntityManager.getGuid();
+	}
+
 	public BankCard getInputCard() {
-		return getInputCard();
-	}	
-	
+		if (InputCard == null)
+			InputCard = EntityManager.getBankCardByPK(getInputCardPK());
+		return InputCard;
+	}
+
 	public void setInputCard(BankCard inputcard) {
+		if (inputcard != null)
+			setInputCardPK(inputcard.getPK());
+		else
+			setInputCardPK(null);
 		this.InputCard = inputcard;
 	}
+
 	public boolean getCardIDValidated() {
 		return CardIDValidated;
 	}	
