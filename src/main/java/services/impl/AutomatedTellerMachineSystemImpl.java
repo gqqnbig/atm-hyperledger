@@ -561,7 +561,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	/* all get and set functions for temp property*/
 	public boolean getPasswordValidated() {
 		if (PasswordValidated == null)
-			PasswordValidated = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.PasswordValidated"), Boolean.class);
+			PasswordValidated = genson.deserialize(EntityManager.getStub().getStringState("system.PasswordValidated"), Boolean.class);
 		if (PasswordValidated != null)
 			return PasswordValidated;
 		else
@@ -569,13 +569,13 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}
 
 	public void setPasswordValidated(boolean passwordvalidated) {
-		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.PasswordValidated", genson.serialize(passwordvalidated));
+		EntityManager.getStub().putStringState("system.PasswordValidated", genson.serialize(passwordvalidated));
 		this.PasswordValidated = passwordvalidated;
 	}
 
 	public float getWithdrawedNumber() {
 		if (WithdrawedNumber == null)
-			WithdrawedNumber = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.WithdrawedNumber"), Float.class);
+			WithdrawedNumber = genson.deserialize(EntityManager.getStub().getStringState("system.WithdrawedNumber"), Float.class);
 		if (WithdrawedNumber != null)
 			return WithdrawedNumber;
 		else
@@ -583,19 +583,19 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}
 
 	public void setWithdrawedNumber(float withdrawednumber) {
-		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.WithdrawedNumber", genson.serialize(withdrawednumber));
+		EntityManager.getStub().putStringState("system.WithdrawedNumber", genson.serialize(withdrawednumber));
 		this.WithdrawedNumber = withdrawednumber;
 	}
 
 	private Object getInputCardPK() {
 		if (InputCardPK == null)
-			InputCardPK = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.InputCardPK"), Integer.class);
+			InputCardPK = genson.deserialize(EntityManager.getStub().getStringState("system.InputCardPK"), Integer.class);
 		return InputCardPK;
 	}
 
 	private void setInputCardPK(Object inputcardPK) {
 		String json = genson.serialize(inputcardPK);
-		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.InputCardPK", json);
+		EntityManager.getStub().putStringState("system.InputCardPK", json);
 		//If we set inputcardPK to null,  getInputCardPK() thinks this fields is not initialized, thus will read the old value from chain.
 		if (inputcardPK != null)
 			this.InputCardPK = inputcardPK;
@@ -619,7 +619,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 
 	public boolean getCardIDValidated() {
 		if (CardIDValidated == null)
-			CardIDValidated = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.CardIDValidated"), Boolean.class);
+			CardIDValidated = genson.deserialize(EntityManager.getStub().getStringState("system.CardIDValidated"), Boolean.class);
 		if (CardIDValidated != null)
 			return CardIDValidated;
 		else
@@ -628,12 +628,12 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 
 	public void setCardIDValidated(boolean cardidvalidated) {
 		this.CardIDValidated = cardidvalidated;
-		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.CardIDValidated", genson.serialize(cardidvalidated));
+		EntityManager.getStub().putStringState("system.CardIDValidated", genson.serialize(cardidvalidated));
 	}
 
 	public boolean getIsDeposit() {
 		if (IsDeposit == null)
-			IsDeposit = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.IsDeposit"), Boolean.class);
+			IsDeposit = genson.deserialize(EntityManager.getStub().getStringState("system.IsDeposit"), Boolean.class);
 		if (IsDeposit != null)
 			return IsDeposit;
 		else
@@ -641,13 +641,13 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}
 
 	public void setIsDeposit(boolean isdeposit) {
-		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.IsDeposit", genson.serialize(isdeposit));
+		EntityManager.getStub().putStringState("system.IsDeposit", genson.serialize(isdeposit));
 		this.IsDeposit = isdeposit;
 	}
 
 	public boolean getIsWithdraw() {
 		if (IsWithdraw == null)
-			IsWithdraw = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.IsWithdraw"), Boolean.class);
+			IsWithdraw = genson.deserialize(EntityManager.getStub().getStringState("system.IsWithdraw"), Boolean.class);
 		if (IsWithdraw != null)
 			return IsWithdraw;
 		else
@@ -655,13 +655,13 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}
 
 	public void setIsWithdraw(boolean iswithdraw) {
-		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.IsWithdraw", genson.serialize(iswithdraw));
+		EntityManager.getStub().putStringState("system.IsWithdraw", genson.serialize(iswithdraw));
 		this.IsWithdraw = iswithdraw;
 	}
 
 	public float getDepositedNumber() {
 		if (DepositedNumber == null)
-			DepositedNumber = genson.deserialize(EntityManager.getStub().getStringState("AutomatedTellerMachineSystemImpl.DepositedNumber"), Float.class);
+			DepositedNumber = genson.deserialize(EntityManager.getStub().getStringState("system.DepositedNumber"), Float.class);
 		if (DepositedNumber != null)
 			return DepositedNumber;
 		else
@@ -669,7 +669,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}
 
 	public void setDepositedNumber(float depositednumber) {
-		EntityManager.getStub().putStringState("AutomatedTellerMachineSystemImpl.DepositedNumber", genson.serialize(depositednumber));
+		EntityManager.getStub().putStringState("system.DepositedNumber", genson.serialize(depositednumber));
 		this.DepositedNumber = depositednumber;
 	}
 	
