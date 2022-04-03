@@ -550,7 +550,6 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	/* temp property for controller */
 	private Boolean PasswordValidated;
 	private Float WithdrawedNumber;
-	private BankCard InputCard;
 	private Object InputCardPK;
 	private BankCard InputCard;
 	private Boolean CardIDValidated;

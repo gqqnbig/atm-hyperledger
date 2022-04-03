@@ -30,7 +30,6 @@ public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable 
 	/* Shared variable from system services and get()/set() methods */
 	private boolean PasswordValidated;
 	private float WithdrawedNumber;
-	private BankCard InputCard;
 	private Object InputCardPK;
 	private BankCard InputCard;
 	private boolean CardIDValidated;
