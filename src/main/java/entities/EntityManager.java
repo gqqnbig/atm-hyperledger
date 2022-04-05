@@ -17,6 +17,8 @@ import java.io.File;
 
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import com.owlike.genson.Genson;
+import java.util.*;
+import java.io.*;
 
 public class EntityManager {
 
@@ -253,6 +255,23 @@ public class EntityManager {
 			AllInstance.put(key, list);
 		}
 		return list;
+	}
+
+	private static java.util.Random random;
+
+	public static java.util.Random getRandom() {
+		if (random == null)
+			random = new Random(getStub().getTxTimestamp().toEpochMilli());
+		return random;
+	}
+
+	public static String getGuid() {
+		try {
+			return UUID.nameUUIDFromBytes(Long.toString(getRandom().nextLong()).getBytes("UTF-8")).toString();
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new RuntimeException();
+		}
 	}
 }
 
