@@ -17,9 +17,11 @@ import java.util.Iterator;
 import org.hyperledger.fabric.shim.*;
 import org.hyperledger.fabric.contract.annotation.*;
 import org.hyperledger.fabric.contract.*;
+import com.owlike.genson.Genson;
 
 @Contract
 public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Serializable, ContractInterface {
+	private static final Genson genson = new Genson();
 	
 	
 	public static Map<String, List<String>> opINVRelatedEntity = new HashMap<String, List<String>>();

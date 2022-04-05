@@ -14,8 +14,10 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 import org.apache.commons.lang3.SerializationUtils;
 import java.util.Iterator;
+import com.owlike.genson.Genson;
 
 public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable {
+	private static final Genson genson = new Genson();
 	
 	
 	public static Map<String, List<String>> opINVRelatedEntity = new HashMap<String, List<String>>();
@@ -89,7 +91,7 @@ public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable 
 	
 	/* Generate inject for sharing temp variables between use cases in system service */
 	public void refresh() {
-		AutomatedTellerMachineSystem automatedtellermachinesystem_service = (AutomatedTellerMachineSystem) ServiceManager.getAllInstancesOf("AutomatedTellerMachineSystem").get(0);
+		AutomatedTellerMachineSystem automatedtellermachinesystem_service = (AutomatedTellerMachineSystem) ServiceManager.getAllInstancesOf(AutomatedTellerMachineSystem.class).get(0);
 		automatedtellermachinesystem_service.setPasswordValidated(PasswordValidated);
 		automatedtellermachinesystem_service.setWithdrawedNumber(WithdrawedNumber);
 		automatedtellermachinesystem_service.setInputCard(InputCard);
