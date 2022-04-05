@@ -14,8 +14,12 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 import org.apache.commons.lang3.SerializationUtils;
 import java.util.Iterator;
+import org.hyperledger.fabric.shim.*;
+import org.hyperledger.fabric.contract.annotation.*;
+import org.hyperledger.fabric.contract.*;
 
-public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Serializable {
+@Contract
+public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Serializable, ContractInterface {
 	
 	
 	public static Map<String, List<String>> opINVRelatedEntity = new HashMap<String, List<String>>();
@@ -94,7 +98,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 	
 	/* Generate inject for sharing temp variables between use cases in system service */
 	public void refresh() {
-		AutomatedTellerMachineSystem automatedtellermachinesystem_service = (AutomatedTellerMachineSystem) ServiceManager.getAllInstancesOf("AutomatedTellerMachineSystem").get(0);
+		AutomatedTellerMachineSystem automatedtellermachinesystem_service = (AutomatedTellerMachineSystem) ServiceManager.getAllInstancesOf(AutomatedTellerMachineSystem.class).get(0);
 		automatedtellermachinesystem_service.setPasswordValidated(PasswordValidated);
 		automatedtellermachinesystem_service.setWithdrawedNumber(WithdrawedNumber);
 		automatedtellermachinesystem_service.setInputCard(InputCard);
@@ -105,6 +109,16 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 	}
 	
 	/* Generate buiness logic according to functional requirement */
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean createUser(final Context ctx, int userid, String name, String address) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = createUser(userid, name, address);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean createUser(int userid, String name, String address) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -113,7 +127,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 		//Get user
 		User user = null;
 		//no nested iterator --  iterator: any previous:any
-		for (User use : (List<User>)EntityManager.getAllInstancesOf("User"))
+		for (User use : (List<User>)EntityManager.getAllInstancesOf(User.class))
 		{
 			if (use.getUserID() == userid)
 			{
@@ -146,7 +160,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			 && 
 			use.getAddress() == address
 			 && 
-			StandardOPs.includes(((List<User>)EntityManager.getAllInstancesOf("User")), use)
+			StandardOPs.includes(((List<User>)EntityManager.getAllInstancesOf(User.class)), use)
 			 && 
 			true)) {
 				throw new PostconditionException();
@@ -168,6 +182,16 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 	 
 	static {opINVRelatedEntity.put("createUser", Arrays.asList("User"));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public User queryUser(final Context ctx, int userid) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = queryUser(userid);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public User queryUser(int userid) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -176,7 +200,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 		//Get user
 		User user = null;
 		//no nested iterator --  iterator: any previous:any
-		for (User use : (List<User>)EntityManager.getAllInstancesOf("User"))
+		for (User use : (List<User>)EntityManager.getAllInstancesOf(User.class))
 		{
 			if (use.getUserID() == userid)
 			{
@@ -209,6 +233,16 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 	} 
 	 
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean modifyUser(final Context ctx, int userid, String name, String address) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = modifyUser(userid, name, address);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean modifyUser(int userid, String name, String address) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -217,7 +251,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 		//Get user
 		User user = null;
 		//no nested iterator --  iterator: any previous:any
-		for (User use : (List<User>)EntityManager.getAllInstancesOf("User"))
+		for (User use : (List<User>)EntityManager.getAllInstancesOf(User.class))
 		{
 			if (use.getUserID() == userid)
 			{
@@ -266,6 +300,16 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 	 
 	static {opINVRelatedEntity.put("modifyUser", Arrays.asList("User"));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean deleteUser(final Context ctx, int userid) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = deleteUser(userid);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean deleteUser(int userid) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -274,7 +318,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 		//Get user
 		User user = null;
 		//no nested iterator --  iterator: any previous:any
-		for (User use : (List<User>)EntityManager.getAllInstancesOf("User"))
+		for (User use : (List<User>)EntityManager.getAllInstancesOf(User.class))
 		{
 			if (use.getUserID() == userid)
 			{
@@ -287,7 +331,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 		/* previous state in post-condition*/
 
 		/* check precondition */
-		if (StandardOPs.oclIsundefined(user) == false && StandardOPs.includes(((List<User>)EntityManager.getAllInstancesOf("User")), user)) 
+		if (StandardOPs.oclIsundefined(user) == false && StandardOPs.includes(((List<User>)EntityManager.getAllInstancesOf(User.class)), user)) 
 		{ 
 			/* Logic here */
 			EntityManager.deleteObject("User", user);
@@ -295,7 +339,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			
 			refresh();
 			// post-condition checking
-			if (!(StandardOPs.excludes(((List<User>)EntityManager.getAllInstancesOf("User")), user)
+			if (!(StandardOPs.excludes(((List<User>)EntityManager.getAllInstancesOf(User.class)), user)
 			 && 
 			true)) {
 				throw new PostconditionException();

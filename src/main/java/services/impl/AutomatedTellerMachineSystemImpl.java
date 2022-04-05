@@ -14,8 +14,12 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 import org.apache.commons.lang3.SerializationUtils;
 import java.util.Iterator;
+import org.hyperledger.fabric.shim.*;
+import org.hyperledger.fabric.contract.annotation.*;
+import org.hyperledger.fabric.contract.*;
 
-public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineSystem, Serializable {
+@Contract
+public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineSystem, Serializable, ContractInterface {
 	
 	
 	public static Map<String, List<String>> opINVRelatedEntity = new HashMap<String, List<String>>();
@@ -29,7 +33,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 
 	public void refresh() {
 		ManageBankCardCRUDService managebankcardcrudservice_service = (ManageBankCardCRUDService) ServiceManager
-				.getAllInstancesOf("ManageBankCardCRUDService").get(0);
+				.getAllInstancesOf(ManageBankCardCRUDService.class).get(0);
 		managebankcardcrudservice_service.setPasswordValidated(PasswordValidated);
 		managebankcardcrudservice_service.setWithdrawedNumber(WithdrawedNumber);
 		managebankcardcrudservice_service.setInputCard(InputCard);
@@ -38,7 +42,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 		managebankcardcrudservice_service.setIsWithdraw(IsWithdraw);
 		managebankcardcrudservice_service.setDepositedNumber(DepositedNumber);
 		ManageUserCRUDService manageusercrudservice_service = (ManageUserCRUDService) ServiceManager
-				.getAllInstancesOf("ManageUserCRUDService").get(0);
+				.getAllInstancesOf(ManageUserCRUDService.class).get(0);
 		manageusercrudservice_service.setPasswordValidated(PasswordValidated);
 		manageusercrudservice_service.setWithdrawedNumber(WithdrawedNumber);
 		manageusercrudservice_service.setInputCard(InputCard);
@@ -49,6 +53,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	}			
 	
 	/* Generate buiness logic according to functional requirement */
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean depositFunds(final Context ctx, float quantity) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = depositFunds(quantity);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean depositFunds(float quantity) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -95,6 +109,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	 
 	static {opINVRelatedEntity.put("depositFunds", Arrays.asList(""));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean inputPassword(final Context ctx, int password) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = inputPassword(password);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean inputPassword(int password) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -156,6 +180,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	 
 	static {opINVRelatedEntity.put("inputPassword", Arrays.asList(""));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean inputCard(final Context ctx, int cardid) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = inputCard(cardid);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean inputCard(int cardid) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -164,7 +198,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 		//Get bc
 		BankCard bc = null;
 		//no nested iterator --  iterator: any previous:any
-		for (BankCard c : (List<BankCard>)EntityManager.getAllInstancesOf("BankCard"))
+		for (BankCard c : (List<BankCard>)EntityManager.getAllInstancesOf(BankCard.class))
 		{
 			if (c.getCardID() == cardid)
 			{
@@ -236,6 +270,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	 
 	static {opINVRelatedEntity.put("inputCard", Arrays.asList(""));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean ejectCard(final Context ctx) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = ejectCard();
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean ejectCard() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -290,6 +334,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	 
 	static {opINVRelatedEntity.put("ejectCard", Arrays.asList(""));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean withdrawCash(final Context ctx, int quantity) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = withdrawCash(quantity);
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean withdrawCash(int quantity) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -336,6 +390,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	 
 	static {opINVRelatedEntity.put("withdrawCash", Arrays.asList(""));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public float printReceipt(final Context ctx) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = printReceipt();
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public float printReceipt() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -403,6 +467,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	 
 	static {opINVRelatedEntity.put("printReceipt", Arrays.asList(""));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public float checkBalance(final Context ctx) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = checkBalance();
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public float checkBalance() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
@@ -436,6 +510,16 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	 
 	static {opINVRelatedEntity.put("checkBalance", Arrays.asList(""));}
 	
+	
+	@Transaction(intent = Transaction.TYPE.SUBMIT)
+	public boolean cardIdentification(final Context ctx) throws PreconditionException, PostconditionException, ThirdPartyServiceException {
+		ChaincodeStub stub = ctx.getStub();
+		EntityManager.setStub(stub);
+
+		var res = cardIdentification();
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean cardIdentification() throws PreconditionException, PostconditionException, ThirdPartyServiceException {
 		
