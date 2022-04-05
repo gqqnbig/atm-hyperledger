@@ -12,6 +12,9 @@ import org.hyperledger.fabric.contract.annotation.*;
 
 @DataType()
 public class BankCard implements Serializable {
+	public Object getPK() {
+		return getCardID();
+	}
 	
 	/* all primary attributes */
 	@Property()
