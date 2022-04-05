@@ -30,6 +30,7 @@ public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable 
 	/* Shared variable from system services and get()/set() methods */
 	private boolean PasswordValidated;
 	private float WithdrawedNumber;
+	private Object InputCardPK;
 	private BankCard InputCard;
 	private boolean CardIDValidated;
 	private boolean IsDeposit;
@@ -52,7 +53,7 @@ public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable 
 		this.WithdrawedNumber = withdrawednumber;
 	}
 	public BankCard getInputCard() {
-		return InputCard;
+		return getInputCard();
 	}	
 	
 	public void setInputCard(BankCard inputcard) {
@@ -90,16 +91,7 @@ public class ThirdPartyServicesImpl implements ThirdPartyServices, Serializable 
 	
 	
 	/* Generate inject for sharing temp variables between use cases in system service */
-	public void refresh() {
-		AutomatedTellerMachineSystem automatedtellermachinesystem_service = (AutomatedTellerMachineSystem) ServiceManager.getAllInstancesOf(AutomatedTellerMachineSystem.class).get(0);
-		automatedtellermachinesystem_service.setPasswordValidated(PasswordValidated);
-		automatedtellermachinesystem_service.setWithdrawedNumber(WithdrawedNumber);
-		automatedtellermachinesystem_service.setInputCard(InputCard);
-		automatedtellermachinesystem_service.setCardIDValidated(CardIDValidated);
-		automatedtellermachinesystem_service.setIsDeposit(IsDeposit);
-		automatedtellermachinesystem_service.setIsWithdraw(IsWithdraw);
-		automatedtellermachinesystem_service.setDepositedNumber(DepositedNumber);
-	}
+	
 	
 	/* Generate buiness logic according to functional requirement */
 	

@@ -39,6 +39,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 	/* Shared variable from system services and get()/set() methods */
 	private boolean PasswordValidated;
 	private float WithdrawedNumber;
+	private Object InputCardPK;
 	private BankCard InputCard;
 	private boolean CardIDValidated;
 	private boolean IsDeposit;
@@ -61,7 +62,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 		this.WithdrawedNumber = withdrawednumber;
 	}
 	public BankCard getInputCard() {
-		return InputCard;
+		return getInputCard();
 	}	
 	
 	public void setInputCard(BankCard inputcard) {

@@ -33,26 +33,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 		services = new ThirdPartyServicesImpl();
 	}
 
-	public void refresh() {
-		ManageBankCardCRUDService managebankcardcrudservice_service = (ManageBankCardCRUDService) ServiceManager
-				.getAllInstancesOf(ManageBankCardCRUDService.class).get(0);
-		managebankcardcrudservice_service.setPasswordValidated(PasswordValidated);
-		managebankcardcrudservice_service.setWithdrawedNumber(WithdrawedNumber);
-		managebankcardcrudservice_service.setInputCard(InputCard);
-		managebankcardcrudservice_service.setCardIDValidated(CardIDValidated);
-		managebankcardcrudservice_service.setIsDeposit(IsDeposit);
-		managebankcardcrudservice_service.setIsWithdraw(IsWithdraw);
-		managebankcardcrudservice_service.setDepositedNumber(DepositedNumber);
-		ManageUserCRUDService manageusercrudservice_service = (ManageUserCRUDService) ServiceManager
-				.getAllInstancesOf(ManageUserCRUDService.class).get(0);
-		manageusercrudservice_service.setPasswordValidated(PasswordValidated);
-		manageusercrudservice_service.setWithdrawedNumber(WithdrawedNumber);
-		manageusercrudservice_service.setInputCard(InputCard);
-		manageusercrudservice_service.setCardIDValidated(CardIDValidated);
-		manageusercrudservice_service.setIsDeposit(IsDeposit);
-		manageusercrudservice_service.setIsWithdraw(IsWithdraw);
-		manageusercrudservice_service.setDepositedNumber(DepositedNumber);
-	}			
+				
 	
 	/* Generate buiness logic according to functional requirement */
 	
@@ -84,7 +65,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			this.setDepositedNumber(quantity);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(this.getInputCard().getBalance() == Pre_this.getInputCard().getBalance()+quantity
 			 && 
@@ -98,7 +79,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -135,7 +116,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			{
 				this.setPasswordValidated(true);
 				
-				refresh();
+				;
 				// post-condition checking
 				if (!((this.getInputCard().getPassword() == password ? this.getPasswordValidated() == true
 				 && 
@@ -146,14 +127,14 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 				}
 				
 				//return code
-				refresh();
+				;
 				return true;
 			}
 			else
 			{
 			 	this.setPasswordValidated(false);
 			 	
-			 	refresh();
+			 	;
 			 	// post-condition checking
 			 	if (!((this.getInputCard().getPassword() == password ? this.getPasswordValidated() == true
 			 	 && 
@@ -164,7 +145,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			 	}
 			 	
 			 	//return code
-			 	refresh();
+			 	;
 			 	return false;
 			}
 			
@@ -221,7 +202,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 				this.setCardIDValidated(true);
 				this.setInputCard(bc);
 				
-				refresh();
+				;
 				// post-condition checking
 				if (!(((StandardOPs.oclIsundefined(bc) == false) ? this.getCardIDValidated() == true
 				 && 
@@ -234,14 +215,14 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 				}
 				
 				//return code
-				refresh();
+				;
 				return true;
 			}
 			else
 			{
 			 	this.setCardIDValidated(false);
 			 	
-			 	refresh();
+			 	;
 			 	// post-condition checking
 			 	if (!(((StandardOPs.oclIsundefined(bc) == false) ? this.getCardIDValidated() == true
 			 	 && 
@@ -254,7 +235,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			 	}
 			 	
 			 	//return code
-			 	refresh();
+			 	;
 			 	return false;
 			}
 			
@@ -301,7 +282,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			this.setDepositedNumber(0);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(this.getInputCard() == null
 			 && 
@@ -323,7 +304,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -365,7 +346,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			this.setIsWithdraw(true);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(this.getInputCard().getBalance() == Pre_this.getInputCard().getBalance()-quantity
 			 && 
@@ -379,7 +360,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -415,14 +396,14 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			if (this.getIsWithdraw() == true)
 			{
 				
-				refresh();
+				;
 				// post-condition checking
 				if (!((this.getIsWithdraw() == true ? true : (this.getIsDeposit() == true ? true : true)))) {
 					throw new PostconditionException();
 				}
 				
 				//return code
-				refresh();
+				;
 				return this.getWithdrawedNumber();
 			}
 			else
@@ -430,27 +411,27 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			 	if (this.getIsDeposit() == true)
 			 	{
 			 		
-			 		refresh();
+			 		;
 			 		// post-condition checking
 			 		if (!((this.getIsWithdraw() == true ? true : (this.getIsDeposit() == true ? true : true)))) {
 			 			throw new PostconditionException();
 			 		}
 			 		
 			 		//return code
-			 		refresh();
+			 		;
 			 		return this.getDepositedNumber();
 			 	}
 			 	else
 			 	{
 			 	 	
-			 	 	refresh();
+			 	 	;
 			 	 	// post-condition checking
 			 	 	if (!((this.getIsWithdraw() == true ? true : (this.getIsDeposit() == true ? true : true)))) {
 			 	 		throw new PostconditionException();
 			 	 	}
 			 	 	
 			 	 	//return code
-			 	 	refresh();
+			 	 	;
 			 	 	return 0;
 			 	}
 			}
@@ -491,7 +472,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			/* Logic here */
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(true)) {
 				throw new PostconditionException();
@@ -499,7 +480,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return this.getInputCard().getBalance();
 		}
 		else
@@ -534,7 +515,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			/* Logic here */
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(true)) {
 				throw new PostconditionException();
@@ -542,7 +523,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -558,6 +539,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 	/* temp property for controller */
 	private boolean PasswordValidated;
 	private float WithdrawedNumber;
+	private Object InputCardPK;
 	private BankCard InputCard;
 	private boolean CardIDValidated;
 	private boolean IsDeposit;
@@ -580,7 +562,7 @@ public class AutomatedTellerMachineSystemImpl implements AutomatedTellerMachineS
 		this.WithdrawedNumber = withdrawednumber;
 	}
 	public BankCard getInputCard() {
-		return InputCard;
+		return getInputCard();
 	}	
 	
 	public void setInputCard(BankCard inputcard) {
