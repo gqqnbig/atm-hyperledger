@@ -8,38 +8,43 @@ import java.util.Arrays;
 import java.time.LocalDate;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import org.hyperledger.fabric.contract.annotation.*;
 
+@DataType()
 public class User implements Serializable {
 	
 	/* all primary attributes */
-	private int UserID;
-	private String Name;
-	private String Address;
+	@Property()
+	private int userID;
+	@Property()
+	private String name;
+	@Property()
+	private String address;
 	
 	/* all references */
 	private List<BankCard> OwnedCard = new LinkedList<BankCard>(); 
 	
 	/* all get and set functions */
 	public int getUserID() {
-		return UserID;
+		return userID;
 	}	
 	
 	public void setUserID(int userid) {
-		this.UserID = userid;
+		this.userID = userid;
 	}
 	public String getName() {
-		return Name;
+		return name;
 	}	
 	
 	public void setName(String name) {
-		this.Name = name;
+		this.name = name;
 	}
 	public String getAddress() {
-		return Address;
+		return address;
 	}	
 	
 	public void setAddress(String address) {
-		this.Address = address;
+		this.address = address;
 	}
 	
 	/* all functions for reference*/

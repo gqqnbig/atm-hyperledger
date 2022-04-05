@@ -8,54 +8,61 @@ import java.util.Arrays;
 import java.time.LocalDate;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import org.hyperledger.fabric.contract.annotation.*;
 
+@DataType()
 public class BankCard implements Serializable {
 	
 	/* all primary attributes */
-	private int CardID;
-	private CardStatus CardStatus;
-	private CardCatalog Catalog;
-	private int Password;
-	private float Balance;
+	@Property()
+	private int cardID;
+	@Property()
+	private CardStatus cardStatus;
+	@Property()
+	private CardCatalog catalog;
+	@Property()
+	private int password;
+	@Property()
+	private float balance;
 	
 	/* all references */
 	private User BelongedUser; 
 	
 	/* all get and set functions */
 	public int getCardID() {
-		return CardID;
+		return cardID;
 	}	
 	
 	public void setCardID(int cardid) {
-		this.CardID = cardid;
+		this.cardID = cardid;
 	}
 	public CardStatus getCardStatus() {
-		return CardStatus;
+		return cardStatus;
 	}	
 	
 	public void setCardStatus(CardStatus cardstatus) {
-		this.CardStatus = cardstatus;
+		this.cardStatus = cardstatus;
 	}
 	public CardCatalog getCatalog() {
-		return Catalog;
+		return catalog;
 	}	
 	
 	public void setCatalog(CardCatalog catalog) {
-		this.Catalog = catalog;
+		this.catalog = catalog;
 	}
 	public int getPassword() {
-		return Password;
+		return password;
 	}	
 	
 	public void setPassword(int password) {
-		this.Password = password;
+		this.password = password;
 	}
 	public float getBalance() {
-		return Balance;
+		return balance;
 	}	
 	
 	public void setBalance(float balance) {
-		this.Balance = balance;
+		this.balance = balance;
 	}
 	
 	/* all functions for reference*/
@@ -80,7 +87,7 @@ public class BankCard implements Serializable {
 	
 	public boolean BankCard_BalanceGreatAndEqualZero() {
 		
-		if (Balance >= 0) {
+		if (balance >= 0) {
 			return true;
 		} else {
 			return false;
