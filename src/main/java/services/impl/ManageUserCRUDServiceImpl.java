@@ -99,16 +99,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 	
 	
 	/* Generate inject for sharing temp variables between use cases in system service */
-	public void refresh() {
-		AutomatedTellerMachineSystem automatedtellermachinesystem_service = (AutomatedTellerMachineSystem) ServiceManager.getAllInstancesOf(AutomatedTellerMachineSystem.class).get(0);
-		automatedtellermachinesystem_service.setPasswordValidated(PasswordValidated);
-		automatedtellermachinesystem_service.setWithdrawedNumber(WithdrawedNumber);
-		automatedtellermachinesystem_service.setInputCard(InputCard);
-		automatedtellermachinesystem_service.setCardIDValidated(CardIDValidated);
-		automatedtellermachinesystem_service.setIsDeposit(IsDeposit);
-		automatedtellermachinesystem_service.setIsWithdraw(IsWithdraw);
-		automatedtellermachinesystem_service.setDepositedNumber(DepositedNumber);
-	}
+	
 	
 	/* Generate buiness logic according to functional requirement */
 	
@@ -153,7 +144,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			EntityManager.addObject("User", use);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(true && 
 			use.getUserID() == userid
@@ -170,7 +161,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -220,13 +211,13 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			/* Logic here */
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(true)) {
 				throw new PostconditionException();
 			}
 			
-			refresh(); return user;
+			; return user;
 		}
 		else
 		{
@@ -274,7 +265,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			user.setAddress(address);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(user.getUserID() == userid
 			 && 
@@ -282,13 +273,15 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			 && 
 			user.getAddress() == address
 			 && 
+			EntityManager.saveModified(User.class)
+			 &&
 			true)) {
 				throw new PostconditionException();
 			}
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -339,7 +332,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			EntityManager.deleteObject("User", user);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(StandardOPs.excludes(((List<User>)EntityManager.getAllInstancesOf(User.class)), user)
 			 && 
@@ -349,7 +342,7 @@ public class ManageUserCRUDServiceImpl implements ManageUserCRUDService, Seriali
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else

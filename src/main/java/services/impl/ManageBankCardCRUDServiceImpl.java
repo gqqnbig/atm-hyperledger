@@ -99,16 +99,7 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 	
 	
 	/* Generate inject for sharing temp variables between use cases in system service */
-	public void refresh() {
-		AutomatedTellerMachineSystem automatedtellermachinesystem_service = (AutomatedTellerMachineSystem) ServiceManager.getAllInstancesOf(AutomatedTellerMachineSystem.class).get(0);
-		automatedtellermachinesystem_service.setPasswordValidated(PasswordValidated);
-		automatedtellermachinesystem_service.setWithdrawedNumber(WithdrawedNumber);
-		automatedtellermachinesystem_service.setInputCard(InputCard);
-		automatedtellermachinesystem_service.setCardIDValidated(CardIDValidated);
-		automatedtellermachinesystem_service.setIsDeposit(IsDeposit);
-		automatedtellermachinesystem_service.setIsWithdraw(IsWithdraw);
-		automatedtellermachinesystem_service.setDepositedNumber(DepositedNumber);
-	}
+	
 	
 	/* Generate buiness logic according to functional requirement */
 	
@@ -155,7 +146,7 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 			EntityManager.addObject("BankCard", ban);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(true && 
 			ban.getCardID() == cardid
@@ -176,7 +167,7 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -225,13 +216,13 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 			/* Logic here */
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(true)) {
 				throw new PostconditionException();
 			}
 			
-			refresh(); return bankcard;
+			; return bankcard;
 		}
 		else
 		{
@@ -281,7 +272,7 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 			bankcard.setBalance(balance);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(bankcard.getCardID() == cardid
 			 && 
@@ -293,13 +284,15 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 			 && 
 			bankcard.getBalance() == balance
 			 && 
+			EntityManager.saveModified(BankCard.class)
+			 &&
 			true)) {
 				throw new PostconditionException();
 			}
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
@@ -349,7 +342,7 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 			EntityManager.deleteObject("BankCard", bankcard);
 			
 			
-			refresh();
+			;
 			// post-condition checking
 			if (!(StandardOPs.excludes(((List<BankCard>)EntityManager.getAllInstancesOf(BankCard.class)), bankcard)
 			 && 
@@ -359,7 +352,7 @@ public class ManageBankCardCRUDServiceImpl implements ManageBankCardCRUDService,
 			
 		
 			//return primitive type
-			refresh();				
+			;				
 			return true;
 		}
 		else
