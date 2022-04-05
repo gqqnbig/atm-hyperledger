@@ -15,7 +15,14 @@ import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.File;
 
+import org.hyperledger.fabric.shim.ChaincodeStub;
+import com.owlike.genson.Genson;
+
 public class EntityManager {
+
+	private static final Genson genson = new Genson();
+
+	public static ChaincodeStub stub;
 
 	private static Map<String, List> AllInstance = new HashMap<String, List>();
 	
@@ -168,7 +175,13 @@ public class EntityManager {
 	}
 	
 	public static boolean addBankCardObject(BankCard o) {
-		return BankCardInstances.add(o);
+		List<BankCard> list = loadList(BankCard.class);
+		if (list.add(o)) {
+			String json = genson.serialize(list);
+			stub.putStringState("BankCard", json);
+			return true;
+		} else
+			return false;
 	}
 	
 	public static boolean addBankCardObjects(List<BankCard> os) {
@@ -176,7 +189,13 @@ public class EntityManager {
 	}
 	
 	public static boolean deleteBankCardObject(BankCard o) {
-		return BankCardInstances.remove(o);
+		List<BankCard> list = loadList(BankCard.class);
+		if (list.remove(o)) {
+			String json = genson.serialize(list);
+			stub.putStringState("BankCard", json);
+			return true;
+		} else
+			return false;
 	}
 	
 	public static boolean deleteBankCardObjects(List<BankCard> os) {
@@ -188,7 +207,13 @@ public class EntityManager {
 	}
 	
 	public static boolean addUserObject(User o) {
-		return UserInstances.add(o);
+		List<User> list = loadList(User.class);
+		if (list.add(o)) {
+			String json = genson.serialize(list);
+			stub.putStringState("User", json);
+			return true;
+		} else
+			return false;
 	}
 	
 	public static boolean addUserObjects(List<User> os) {
@@ -196,12 +221,38 @@ public class EntityManager {
 	}
 	
 	public static boolean deleteUserObject(User o) {
-		return UserInstances.remove(o);
+		List<User> list = loadList(User.class);
+		if (list.remove(o)) {
+			String json = genson.serialize(list);
+			stub.putStringState("User", json);
+			return true;
+		} else
+			return false;
 	}
 	
 	public static boolean deleteUserObjects(List<User> os) {
 		return UserInstances.removeAll(os);
 	}
   
+
+	public static <T> List<T> getAllInstancesOf(Class<T> clazz) {
+		List<T> list = loadList(clazz);
+		return list;
+	}
+
+	private static <T> List<T> loadList(Class<T> clazz) {
+		String key = clazz.getSimpleName();
+		List<T> list = AllInstance.get(key);
+		if (list == null || list.size() == 0) {
+			String json = stub.getStringState(key);
+			System.out.printf("loadList %s: %s\n", key, json);
+			if (json != null && Objects.equals(json, "") == false)
+				list = GensonHelper.deserializeList(genson, json, clazz);
+			else
+				list = new LinkedList<>();
+			AllInstance.put(key, list);
+		}
+		return list;
+	}
 }
 
