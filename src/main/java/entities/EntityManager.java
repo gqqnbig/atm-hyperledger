@@ -273,5 +273,20 @@ public class EntityManager {
 			throw new RuntimeException();
 		}
 	}
+
+	public static ChaincodeStub getStub() {
+		return stub;
+	}
+
+	public static void setStub(ChaincodeStub stub) {
+		EntityManager.stub = stub;
+		random = null;
+
+		BankCardInstances = new LinkedList<>();
+		UserInstances = new LinkedList<>();
+
+		AllInstance.put("BankCard", BankCardInstances);
+		AllInstance.put("User", UserInstances);
+	}
 }
 
