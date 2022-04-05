@@ -288,5 +288,25 @@ public class EntityManager {
 		AllInstance.put("BankCard", BankCardInstances);
 		AllInstance.put("User", UserInstances);
 	}
+
+	public static BankCard getBankCardByPK(Object pk) {
+		if (pk == null)
+			return null;
+		for (var i : EntityManager.getAllInstancesOf(BankCard.class)) {
+			if (Objects.equals(i.getPK(), pk))
+				return i;
+		}
+		return null;
+	}
+
+	public static User getUserByPK(Object pk) {
+		if (pk == null)
+			return null;
+		for (var i : EntityManager.getAllInstancesOf(User.class)) {
+			if (Objects.equals(i.getPK(), pk))
+				return i;
+		}
+		return null;
+	}
 }
 
