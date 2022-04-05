@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import org.hyperledger.fabric.contract.annotation.*;
+import com.owlike.genson.annotation.*;
 
 @DataType()
 public class BankCard implements Serializable {
@@ -29,6 +30,8 @@ public class BankCard implements Serializable {
 	private float balance;
 	
 	/* all references */
+	@JsonProperty
+	private Object BelongedUserPK;
 	private User BelongedUser; 
 	
 	/* all get and set functions */
@@ -69,12 +72,16 @@ public class BankCard implements Serializable {
 	}
 	
 	/* all functions for reference*/
+	@JsonIgnore
 	public User getBelongedUser() {
+		if (BelongedUser == null)
+			BelongedUser = EntityManager.getUserByPK(BelongedUserPK);
 		return BelongedUser;
 	}	
 	
 	public void setBelongedUser(User user) {
 		this.BelongedUser = user;
+		this.BelongedUserPK = user.getPK();
 	}			
 	
 

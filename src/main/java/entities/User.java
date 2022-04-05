@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import org.hyperledger.fabric.contract.annotation.*;
+import com.owlike.genson.annotation.*;
+import java.util.stream.*;
 
 @DataType()
 public class User implements Serializable {
@@ -25,6 +27,8 @@ public class User implements Serializable {
 	private String address;
 	
 	/* all references */
+	@JsonProperty
+	private List<Object> OwnedCardPKs = new LinkedList<>();
 	private List<BankCard> OwnedCard = new LinkedList<BankCard>(); 
 	
 	/* all get and set functions */
@@ -51,15 +55,22 @@ public class User implements Serializable {
 	}
 	
 	/* all functions for reference*/
+	@JsonIgnore
 	public List<BankCard> getOwnedCard() {
+		if (OwnedCard == null)
+			OwnedCard = OwnedCardPKs.stream().map(EntityManager::getBankCardByPK).collect(Collectors.toList());
 		return OwnedCard;
 	}	
 	
 	public void addOwnedCard(BankCard bankcard) {
+		getOwnedCard();
+		this.OwnedCardPKs.add(bankcard.getPK());
 		this.OwnedCard.add(bankcard);
 	}
 	
 	public void deleteOwnedCard(BankCard bankcard) {
+		getOwnedCard();
+		this.OwnedCardPKs.remove(bankcard.getPK());
 		this.OwnedCard.remove(bankcard);
 	}
 	
